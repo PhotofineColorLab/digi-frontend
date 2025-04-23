@@ -46,6 +46,31 @@ const DigitalAlbum: React.FC<DigitalAlbumProps> = ({ album, onClose }) => {
     }
   };
   
+  // Support swipe gestures for mobile
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const swipeDistance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50; // Minimum distance to detect a swipe
+
+    if (swipeDistance > minSwipeDistance) {
+      // Swiped left -> next page
+      nextPage();
+    } else if (swipeDistance < -minSwipeDistance) {
+      // Swiped right -> previous page
+      prevPage();
+    }
+  };
+  
   // Share URL for the album
   const albumShareUrl = `${window.location.origin}/album/${album.id}`;
   
@@ -83,12 +108,13 @@ const DigitalAlbum: React.FC<DigitalAlbumProps> = ({ album, onClose }) => {
   }, [currentPage, isFlipping]);
   
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-      <div className="absolute top-4 right-4 flex space-x-2">
+    <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 overflow-hidden">
+      <div className="absolute top-4 right-4 flex space-x-2 z-10">
         <button
           onClick={() => setShowQRCode(true)}
           className="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white"
           title="Show QR Code"
+          aria-label="Show QR Code"
         >
           <QrCode className="w-5 h-5" />
         </button>
@@ -96,6 +122,7 @@ const DigitalAlbum: React.FC<DigitalAlbumProps> = ({ album, onClose }) => {
           onClick={handleShare}
           className="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white"
           title="Share Album"
+          aria-label="Share Album"
         >
           <Share className="w-5 h-5" />
         </button>
@@ -104,19 +131,20 @@ const DigitalAlbum: React.FC<DigitalAlbumProps> = ({ album, onClose }) => {
             onClick={onClose}
             className="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white"
             title="Close Album"
+            aria-label="Close Album"
           >
             <X className="w-5 h-5" />
           </button>
         )}
       </div>
       
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/10 px-4 py-2 rounded-full text-white text-sm">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/10 px-4 py-2 rounded-full text-white text-sm z-10">
         {currentPage + 1} / {totalPages}
       </div>
       
-      <div className="relative w-full max-w-4xl mx-auto h-[80vh]">
+      <div className="relative w-full max-w-4xl mx-auto h-[80vh] px-4 sm:px-6">
         {/* Album title */}
-        <h2 className="text-white text-xl font-medium absolute -top-12 left-0 w-full text-center">
+        <h2 className="text-white text-xl font-medium absolute -top-12 left-0 w-full text-center truncate px-4">
           {album.name}
         </h2>
         
@@ -124,6 +152,9 @@ const DigitalAlbum: React.FC<DigitalAlbumProps> = ({ album, onClose }) => {
         <div 
           ref={bookRef}
           className="w-full h-full relative rounded-lg overflow-hidden shadow-2xl"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {/* Current page with transition effect */}
           <div 
@@ -138,14 +169,17 @@ const DigitalAlbum: React.FC<DigitalAlbumProps> = ({ album, onClose }) => {
               src={orderedImages[currentPage]?.url} 
               alt={`Page ${currentPage + 1}`}
               className="w-full h-full object-contain"
+              loading="eager"
+              onClick={nextPage}
             />
           </div>
           
-          {/* Navigation buttons */}
+          {/* Navigation buttons - larger touch targets for mobile */}
           <button
             onClick={prevPage}
             disabled={currentPage === 0 || isFlipping}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed z-10"
+            aria-label="Previous page"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
@@ -153,7 +187,8 @@ const DigitalAlbum: React.FC<DigitalAlbumProps> = ({ album, onClose }) => {
           <button
             onClick={nextPage}
             disabled={currentPage === totalPages - 1 || isFlipping}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white disabled:opacity-50 disabled:cursor-not-allowed z-10"
+            aria-label="Next page"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
@@ -162,13 +197,14 @@ const DigitalAlbum: React.FC<DigitalAlbumProps> = ({ album, onClose }) => {
       
       {/* QR Code modal */}
       {showQRCode && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-lg p-4 sm:p-6 max-w-md w-full mx-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium">Share Album</h3>
               <button 
                 onClick={() => setShowQRCode(false)}
                 className="text-gray-500 hover:text-gray-700"
+                aria-label="Close QR Code dialog"
               >
                 <X className="w-5 h-5" />
               </button>

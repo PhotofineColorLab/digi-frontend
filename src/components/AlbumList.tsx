@@ -26,14 +26,14 @@ const AlbumList: React.FC<AlbumListProps> = ({
   
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
         <h2 className="text-2xl font-semibold text-gray-800 flex items-center">
           <Book className="mr-2 text-blue-500" />
           My Digital Albums
         </h2>
         <button
           onClick={onCreateNew}
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors w-full sm:w-auto justify-center sm:justify-start"
         >
           <Plus className="w-4 h-4 mr-1" />
           New Album
@@ -61,18 +61,27 @@ const AlbumList: React.FC<AlbumListProps> = ({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {albums.map(album => (
             <div
               key={album.id}
               onClick={() => onAlbumSelect(album.id)}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+              tabIndex={0}
+              role="button"
+              aria-label={`View ${album.name} album`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  onAlbumSelect(album.id);
+                }
+              }}
             >
               <div className="aspect-[4/3] overflow-hidden bg-gray-100">
                 <img
                   src={album.coverUrl}
                   alt={album.name}
                   className="w-full h-full object-cover transition-transform hover:scale-105"
+                  loading="lazy"
                 />
               </div>
               <div className="p-4">
@@ -80,7 +89,7 @@ const AlbumList: React.FC<AlbumListProps> = ({
                   {album.name}
                 </h3>
                 <div className="flex items-center text-sm text-gray-500 mb-2">
-                  <Calendar className="w-3.5 h-3.5 mr-1" />
+                  <Calendar className="w-3.5 h-3.5 mr-1 flex-shrink-0" />
                   {formatDate(album.createdAt)}
                 </div>
                 {album.description && (

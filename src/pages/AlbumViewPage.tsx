@@ -41,7 +41,7 @@ const AlbumViewPage: React.FC = () => {
   
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center">
           <Loader className="w-10 h-10 text-blue-500 animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading album...</p>
@@ -52,9 +52,9 @@ const AlbumViewPage: React.FC = () => {
   
   if (error || !album) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-6 bg-white rounded-lg shadow-sm">
-          <h1 className="text-2xl font-semibold text-gray-800 mb-2">Album Not Found</h1>
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="text-center max-w-md mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-sm">
+          <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">Album Not Found</h1>
           <p className="text-gray-600 mb-6">{error || 'The requested album could not be found.'}</p>
           <Link
             to="/"
