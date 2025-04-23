@@ -1,8 +1,8 @@
 import { cloudinaryConfig, generateAlbumFolderName } from '../config/cloudinary';
 import type { ImageFile, CloudinaryImage, Album, AlbumMetadata } from '../types';
 
-// API base URL for the backend - use environment variable or default to localhost
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// API base URL for the backend - pointing to the deployed backend
+const API_URL = 'https://digi-backend-hxop.onrender.com/api';
 
 // Upload a single image to Cloudinary
 export const uploadImage = async (
