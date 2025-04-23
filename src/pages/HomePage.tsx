@@ -3,8 +3,9 @@ import Header from '../components/Header';
 import AlbumList from '../components/AlbumList';
 import AlbumCreationForm from '../components/AlbumCreationForm';
 import DigitalAlbum from '../components/DigitalAlbum';
-import { getAlbums, getAlbumById, fetchAlbumFromMongoDB } from '../services/cloudinaryService';
+import { getAlbums, fetchAlbumFromMongoDB } from '../services/cloudinaryService';
 import type { Album, AlbumMetadata } from '../types';
+import { ArrowLeft } from 'lucide-react';
 
 const HomePage: React.FC = () => {
   const [isCreating, setIsCreating] = useState(false);
@@ -66,19 +67,17 @@ const HomePage: React.FC = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--background)]">
       <Header />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <main className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
         {isCreating ? (
-          <div>
+          <div className="animate-fade-in">
             <button
               onClick={() => setIsCreating(false)}
-              className="inline-flex items-center text-blue-600 font-medium mb-4"
+              className="btn btn-secondary mb-5 text-sm"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
-              </svg>
+              <ArrowLeft className="w-4 h-4 mr-2" />
               Back to albums
             </button>
             <AlbumCreationForm onAlbumCreated={handleAlbumCreated} />

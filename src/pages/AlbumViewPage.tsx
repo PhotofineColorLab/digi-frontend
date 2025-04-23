@@ -41,10 +41,12 @@ const AlbumViewPage: React.FC = () => {
   
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--background)]">
         <div className="text-center">
-          <Loader className="w-10 h-10 text-blue-500 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading album...</p>
+          <div className="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Loader className="w-7 h-7 text-[var(--primary)] animate-spin" />
+          </div>
+          <p className="text-[var(--text-secondary)]">Loading album...</p>
         </div>
       </div>
     );
@@ -52,15 +54,15 @@ const AlbumViewPage: React.FC = () => {
   
   if (error || !album) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="text-center max-w-md mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-sm">
-          <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">Album Not Found</h1>
-          <p className="text-gray-600 mb-6">{error || 'The requested album could not be found.'}</p>
+      <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--background)]">
+        <div className="card p-6 max-w-md w-full mx-auto text-center">
+          <h1 className="text-xl font-medium text-[var(--text-primary)] mb-3">Album Not Found</h1>
+          <p className="text-[var(--text-secondary)] mb-6">{error || 'The requested album could not be found.'}</p>
           <Link
             to="/"
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            className="btn btn-primary"
           >
-            <ArrowLeft className="w-4 h-4 mr-1" />
+            <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Homepage
           </Link>
         </div>

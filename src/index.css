@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --background: #f9fafb;
+  --card: #ffffff;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --border-focus: #3b82f6;
+}
+
 @keyframes pageFlipOutRight {
   0% {
     transform: perspective(2000px) rotateY(0);
@@ -24,6 +35,24 @@
   }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease forwards;
+}
+
 .animate-page-flip-out-right {
   animation: pageFlipOutRight 0.5s ease-in-out forwards;
   transform-origin: left center;
@@ -41,7 +70,7 @@ a, button {
 
 /* Custom scrollbar for a more polished feel */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -57,9 +86,10 @@ a, button {
 }
 
 body {
-  @apply text-gray-900 antialiased;
+  @apply text-gray-900 antialiased bg-[var(--background)];
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* Line clamping utility classes */
@@ -77,6 +107,32 @@ body {
   overflow: hidden;
 }
 
+/* Custom component classes */
+.btn {
+  @apply inline-flex items-center justify-center rounded-lg font-medium transition-colors;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+}
+
+.btn-primary {
+  @apply bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)];
+}
+
+.btn-secondary {
+  @apply bg-white text-[var(--text-primary)] border border-[var(--border)] hover:bg-gray-50;
+}
+
+.btn-icon {
+  @apply p-2 rounded-full flex items-center justify-center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.card {
+  @apply bg-[var(--card)] rounded-xl shadow-sm border border-[var(--border)];
+  overflow: hidden;
+}
+
 /* Mobile optimizations */
 @media (max-width: 640px) {
   /* Increase touch targets for better mobile experience */
@@ -91,7 +147,25 @@ body {
   
   /* Optimize form inputs for mobile */
   input, textarea, select {
-    @apply text-base py-3;
+    @apply text-base px-4 py-3 rounded-lg border border-[var(--border)] w-full focus:outline-none focus:ring-2 focus:ring-[var(--border-focus)];
+  }
+
+  /* Album card mobile adjustments */
+  .aspect-video {
+    aspect-ratio: 16/9;
+  }
+  
+  /* Force text to stay visible in mobile views */
+  .text-left {
+    text-align: left !important;
+  }
+
+  /* Ensure text can wrap properly */
+  .truncate {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
